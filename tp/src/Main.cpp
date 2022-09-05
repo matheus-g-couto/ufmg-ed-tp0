@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 
-int main() {
+int main(int argc, char *argv[]) {
     PpmImg *input_img = new PpmImg();
-    std::string input_file_name = "../sample/lagoa.ppm";
+    std::string input_file_name = "../sample/bolao.ppm";
 
     readPpmImg(input_img, input_file_name);
 
@@ -18,8 +18,8 @@ int main() {
     std::string output_file_name = "vasco.pgm";
     writePgmImg(output_img, output_file_name);
 
-    killPpmImg(input_img);
-    killPgmImg(output_img);
+    delete input_img;
+    delete output_img;
 
     return 0;
 }

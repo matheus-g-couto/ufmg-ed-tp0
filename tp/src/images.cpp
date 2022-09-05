@@ -28,13 +28,13 @@ void readPpmImg(PpmImg *ppm, std::string file_name) {
         std::getline(in, line);
 
         // aloca as matrizes red, green e blue dinamicamente
-        ppm->red = new int *[ppm->width];
-        ppm->green = new int *[ppm->width];
-        ppm->blue = new int *[ppm->width];
-        for (int i = 0; i < ppm->width; i++) {
-            ppm->red[i] = new int[ppm->height];
-            ppm->green[i] = new int[ppm->height];
-            ppm->blue[i] = new int[ppm->height];
+        ppm->red = new int *[ppm->height];
+        ppm->green = new int *[ppm->height];
+        ppm->blue = new int *[ppm->height];
+        for (int i = 0; i < ppm->height; i++) {
+            ppm->red[i] = new int[ppm->width];
+            ppm->green[i] = new int[ppm->width];
+            ppm->blue[i] = new int[ppm->width];
         }
 
         // lê as linhas referentes às cores da imagem
@@ -50,22 +50,7 @@ void readPpmImg(PpmImg *ppm, std::string file_name) {
             }
         }
 
-        // ss = std::stringstream();
-        // std::getline(in, line);
-        // ss << line;
-        // std::cout << ss.str() << std::endl;
-
-        // int x, y, z;
-        // ss >> x;
-        // ss >> y;
-        // ss >> z;
-
-        // std::cout << x << " " << y << " " << z << std::endl;
-
         // fecha o ifstream
-
-        std::cout << 49 * (0.3 * 192 + 0.59 * 244 + 0.11 * 245) / 255
-                  << std::endl;
         in.close();
     }
 }
@@ -86,11 +71,6 @@ void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm) {
                 ppm->red[i][j], ppm->green[i][j], ppm->blue[i][j]);
         }
     }
-
-    // std::cout << ppm->red[0][1] << " " << ppm->green[0][1] << " "
-    //           << ppm->blue[0][1] << std::endl;
-
-    // getGrayScaleFromRgb(ppm->red[0][0], ppm->green[0][0], ppm->blue[0][0]);
 }
 
 void writePgmImg(PgmImg *pgm, std::string file_name) {
@@ -111,6 +91,7 @@ void writePgmImg(PgmImg *pgm, std::string file_name) {
     }
 }
 
+// Desaloca a memória usada por uma variável PpmImg
 void killPpmImg(PpmImg *ppm) {
     for (int i = 0; i < ppm->width; i++) {
         delete[] ppm->red[i];
@@ -125,6 +106,7 @@ void killPpmImg(PpmImg *ppm) {
     ppm->width = ppm->height = -1;
 }
 
+// Desaloca a memória usada por uma variável PgmImg
 void killPgmImg(PgmImg *pgm) {
     for (int i = 0; i < pgm->width; i++) {
         delete[] pgm->gray[i];
