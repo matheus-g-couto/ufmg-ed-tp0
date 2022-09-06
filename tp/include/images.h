@@ -3,22 +3,30 @@
 #include <string>
 
 struct PpmImg {
+    std::string path;
     int width;
     int height;
     int **red;
     int **green;
     int **blue;
+
+    PpmImg() {}
+    PpmImg(std::string p) : path(p) {}
 };
 
 struct PgmImg {
+    std::string path;
     int width;
     int height;
     int **gray;
+
+    PgmImg() {}
+    PgmImg(std::string p) : path(p) {}
 };
 
-void readPpmImg(PpmImg *ppm, std::string file_name);
+void readPpmImg(PpmImg *ppm);
 void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm);
-void writePgmImg(PgmImg *pgm, std::string file_name);
+void writePgmImg(PgmImg *pgm);
 
 // int getGrayScaleFromRgb(int red, int green, int blue);
 

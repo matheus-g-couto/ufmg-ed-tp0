@@ -9,8 +9,8 @@ int getGrayScaleFromRgb(int red, int green, int blue) {
     return (int)v;
 }
 
-void readPpmImg(PpmImg *ppm, std::string file_name) {
-    std::ifstream in(file_name);
+void readPpmImg(PpmImg *ppm) {
+    std::ifstream in(ppm->path);
 
     if (in.is_open()) {
         std::string line;
@@ -73,8 +73,8 @@ void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm) {
     }
 }
 
-void writePgmImg(PgmImg *pgm, std::string file_name) {
-    std::ofstream out(file_name);
+void writePgmImg(PgmImg *pgm) {
+    std::ofstream out(pgm->path);
 
     // escreve as linhas iniciais padrão de um arquivo .pgm
     out << "P2" << std::endl;
