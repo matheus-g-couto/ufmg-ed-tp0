@@ -29,9 +29,10 @@ INCLUDE_FOLDER = ./include/
 BIN_FOLDER = ./bin/
 OBJ_FOLDER = ./obj/
 SRC_FOLDER = ./src/
+ASSETS_OUTPUT_FOLDER = ./assets/out/
 
 # all sources, objs, and header files
-MAIN = Main
+MAIN = main
 TARGET = run.out
 SRC = $(wildcard $(SRC_FOLDER)*.cpp)
 OBJ = $(patsubst $(SRC_FOLDER)%.cpp, $(OBJ_FOLDER)%.o, $(SRC))
@@ -43,4 +44,4 @@ all: $(OBJ)
 	$(CC) $(CXXFLAGS) -o $(BIN_FOLDER)$(TARGET) $(OBJ)
 
 clean:
-	@rm -rf $(OBJ_FOLDER)* $(BIN_FOLDER)*
+	@rm -rf $(OBJ_FOLDER)* $(BIN_FOLDER)* $(ASSETS_OUTPUT_FOLDER)*

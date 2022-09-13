@@ -1,19 +1,21 @@
+#include "memlog.h"
 #include <fstream>
 #include <getopt.h>
 #include <images.h>
 #include <iostream>
+#include <string.h>
 #include <string>
 
 struct Flags {
     std::string input_file;
     std::string output_file;
-    bool save_logs;
-    std::string log_file;
-    bool save_mem_acc;
+    char log_file[100];
+    bool regmem;
 
     Flags()
-        : input_file("../sample/mineirao.ppm"), output_file("bin/out.pgm"),
-          save_logs(false), save_mem_acc(false) {}
+        : input_file("assets/in/mineirao.ppm"),
+          output_file("assets/out/output.pgm"), log_file("bin/log.out"),
+          regmem(false) {}
 };
 
 void parse_args(int argc, char **argv, Flags *f) {
@@ -27,11 +29,10 @@ void parse_args(int argc, char **argv, Flags *f) {
             f->output_file = optarg;
             break;
         case 'p':
-            f->save_logs = true;
-            f->log_file = optarg;
+            strcpy(f->log_file, optarg);
             break;
         case 'l':
-            f->save_mem_acc = true;
+            f->regmem = true;
             break;
         case '?':
             std::cout << "opcao desconhecida ou invalida" << std::endl;
@@ -43,24 +44,41 @@ void parse_args(int argc, char **argv, Flags *f) {
     }
 }
 
+void printInputTemplate() {
+    std::cout << "Exemplo de entrada: run.out -i <input_file> -o <output_file>"
+              << std::endl;
+}
+
 int main(int argc, char **argv) {
+    // verifica se a linha de comando passou argumentos
     Flags *f = new Flags();
     parse_args(argc, argv, f);
 
-    PpmImg *input_img = new PpmImg(f->input_file);
+    // inicia registro de acesso
+    iniciaMemLog(f->log_file);
+    if (f->regmem)
+        ativaMemLog();
+    else
+        desativaMemLog();
 
+    // cria o objeto onde será salvo o arquivo .ppm
+    defineFaseMemLog(0);
+    PpmImg *input_img = new PpmImg(f->input_file);
     readPpmImg(input_img);
 
-    std::cout << "dimensoes da imagem: " << input_img->width << " "
-              << input_img->height << std::endl;
-
+    // cria o objeto onde será salvo o arquivo .pgm
+    defineFaseMemLog(1);
     PgmImg *output_img = new PgmImg(f->output_file);
     convertPpmToPgm(input_img, output_img);
 
+    // escreve a imagem convertida no arquivo de saída
+    defineFaseMemLog(2);
     writePgmImg(output_img);
 
+    // desaloca a memória dos objetos
+    defineFaseMemLog(3);
     delete input_img;
     delete output_img;
 
-    return 0;
+    return finalizaMemLog();
 }

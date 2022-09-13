@@ -1,4 +1,5 @@
 #include "images.h"
+#include "memlog.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -23,6 +24,8 @@ void readPpmImg(PpmImg *ppm) {
         std::getline(in, line);
         ss << line;
         ss >> ppm->width >> ppm->height;
+        ESCREVEMEMLOG((long int)(&(ppm->width)), sizeof(int), 0);
+        ESCREVEMEMLOG((long int)(&(ppm->height)), sizeof(int), 0);
 
         // terceira linha de um arquivo .ppm é "255"
         std::getline(in, line);
@@ -47,6 +50,10 @@ void readPpmImg(PpmImg *ppm) {
                 ss >> ppm->red[i][j];
                 ss >> ppm->green[i][j];
                 ss >> ppm->blue[i][j];
+
+                ESCREVEMEMLOG((long int)(&(ppm->red[i][j])), sizeof(int), 0);
+                ESCREVEMEMLOG((long int)(&(ppm->green[i][j])), sizeof(int), 0);
+                ESCREVEMEMLOG((long int)(&(ppm->blue[i][j])), sizeof(int), 0);
             }
         }
 
@@ -60,15 +67,21 @@ void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm) {
     pgm->height = ppm->height;
 
     // aloca a matriz gray dinamicamente
-    pgm->gray = new int *[pgm->width];
-    for (int i = 0; i < pgm->width; i++)
-        pgm->gray[i] = new int[pgm->height];
+    pgm->gray = new int *[pgm->height];
+    for (int i = 0; i < pgm->height; i++)
+        pgm->gray[i] = new int[pgm->width];
 
     // converte de rgb para escala de cinza
     for (int i = 0; i < ppm->height; i++) {
         for (int j = 0; j < ppm->width; j++) {
             pgm->gray[i][j] = getGrayScaleFromRgb(
                 ppm->red[i][j], ppm->green[i][j], ppm->blue[i][j]);
+
+            LEMEMLOG((long int)(&(ppm->red[i][j])), sizeof(int), 0);
+            LEMEMLOG((long int)(&(ppm->green[i][j])), sizeof(int), 0);
+            LEMEMLOG((long int)(&(ppm->blue[i][j])), sizeof(int), 0);
+
+            ESCREVEMEMLOG((long int)(&(pgm->gray[i][j])), sizeof(int), 0);
         }
     }
 }
@@ -84,6 +97,8 @@ void writePgmImg(PgmImg *pgm) {
     for (int i = 0; i < pgm->height; i++) {
         for (int j = 0; j < pgm->width; j++) {
             out << pgm->gray[i][j];
+            LEMEMLOG((long int)(&(pgm->gray[i][j])), sizeof(int), 0);
+
             if (j != pgm->width - 1)
                 out << " ";
         }
