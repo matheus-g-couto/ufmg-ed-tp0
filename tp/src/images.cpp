@@ -96,7 +96,7 @@ void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm) {
             LEMEMLOG((long int)(&(ppm->green[i][j])), sizeof(int), 0);
             LEMEMLOG((long int)(&(ppm->blue[i][j])), sizeof(int), 0);
 
-            ESCREVEMEMLOG((long int)(&(pgm->gray[i][j])), sizeof(int), 0);
+            ESCREVEMEMLOG((long int)(&(pgm->gray[i][j])), sizeof(int), 1);
         }
     }
 }
@@ -115,7 +115,7 @@ void writePgmImg(PgmImg *pgm) {
     for (int i = 0; i < pgm->height; i++) {
         for (int j = 0; j < pgm->width; j++) {
             out << pgm->gray[i][j];
-            LEMEMLOG((long int)(&(pgm->gray[i][j])), sizeof(int), 0);
+            LEMEMLOG((long int)(&(pgm->gray[i][j])), sizeof(int), 1);
 
             if (j != pgm->width - 1)
                 out << " ";
