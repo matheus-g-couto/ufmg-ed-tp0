@@ -1,5 +1,6 @@
 #include "images.h"
 #include "memlog.h"
+#include "msgassert.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -10,7 +11,18 @@ int getGrayScaleFromRgb(int red, int green, int blue) {
     return (int)v;
 }
 
+// https://stackoverflow.com/questions/51949/how-to-get-file-extension-from-string-in-c
+bool checkFileExtension(std::string path, std::string extension) {
+    if (path.substr(path.find_last_of('.') + 1) == extension)
+        return true;
+    else
+        return false;
+}
+
 void readPpmImg(PpmImg *ppm) {
+    erroAssert(checkFileExtension(ppm->path, "ppm"),
+               "Arquivo de entrada não é formato .ppm");
+
     std::ifstream in(ppm->path);
 
     if (in.is_open()) {
@@ -26,6 +38,9 @@ void readPpmImg(PpmImg *ppm) {
         ss >> ppm->width >> ppm->height;
         ESCREVEMEMLOG((long int)(&(ppm->width)), sizeof(int), 0);
         ESCREVEMEMLOG((long int)(&(ppm->height)), sizeof(int), 0);
+
+        erroAssert(ppm->width > 0, "Imagem de entrada tem largura negativa");
+        erroAssert(ppm->height > 0, "Imagem de entrada tem altura negativa");
 
         // terceira linha de um arquivo .ppm é "255"
         std::getline(in, line);
@@ -87,6 +102,9 @@ void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm) {
 }
 
 void writePgmImg(PgmImg *pgm) {
+    erroAssert(checkFileExtension(pgm->path, "pgm"),
+               "Arquivo de saida não é formato .pgm");
+
     std::ofstream out(pgm->path);
 
     // escreve as linhas iniciais padrão de um arquivo .pgm

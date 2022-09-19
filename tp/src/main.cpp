@@ -1,4 +1,5 @@
 #include "memlog.h"
+#include "msgassert.h"
 #include <fstream>
 #include <getopt.h>
 #include <images.h>
@@ -20,33 +21,33 @@ struct Flags {
 
 void parse_args(int argc, char **argv, Flags *f) {
     int opt;
+    bool has_in = false, has_out = false, has_log = false;
     while ((opt = getopt(argc, argv, "i:o:p:l")) != -1) {
         switch (opt) {
         case 'i':
+            has_in = true;
             f->input_file = optarg;
             break;
         case 'o':
+            has_out = true;
             f->output_file = optarg;
             break;
         case 'p':
+            has_log = true;
             strcpy(f->log_file, optarg);
             break;
         case 'l':
             f->regmem = true;
             break;
         case '?':
-            std::cout << "opcao desconhecida ou invalida" << std::endl;
-            abort();
+            erroAssert(false, "Opcao de linha de comando invalida");
             break;
-        default:
-            std::cout << "vascao" << std::endl;
         }
     }
-}
 
-void printInputTemplate() {
-    std::cout << "Exemplo de entrada: run.out -i <input_file> -o <output_file>"
-              << std::endl;
+    avisoAssert(has_in, "Usando o arquivo .ppm padrao: assets/in/mineirao.ppm");
+    avisoAssert(has_out, "Usando o arquivo .pgm padrao: assets/out/output.pgm");
+    avisoAssert(has_log, "Usando o arquivo de log padrao: bin/log.out");
 }
 
 int main(int argc, char **argv) {

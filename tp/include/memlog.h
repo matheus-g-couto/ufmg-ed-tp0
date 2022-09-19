@@ -16,14 +16,13 @@
 #include <stdio.h>
 #include <time.h>
 
-
-typedef struct memlog{
-	FILE * log;
-	clockid_t clk_id;
-	struct timespec inittime;
-	long count;
-	int fase;
-	int ativo;
+typedef struct memlog {
+    FILE *log;
+    clockid_t clk_id;
+    struct timespec inittime;
+    long count;
+    int fase;
+    int ativo;
 } memlog_tipo;
 extern memlog_tipo ml;
 
@@ -32,12 +31,14 @@ extern memlog_tipo ml;
 #define MLINATIVO 0
 
 // macros para maior eficiencia
-#define LEMEMLOG(pos,tam,id) ((void) ((ml.ativo==MLATIVO)?leMemLog(pos,tam,id):0))
-#define ESCREVEMEMLOG(pos,tam,id) ((void) ((ml.ativo==MLATIVO)?escreveMemLog(pos,tam,id):0))
+#define LEMEMLOG(pos, tam, id)                                                 \
+    ((void)((ml.ativo == MLATIVO) ? leMemLog(pos, tam, id) : 0))
+#define ESCREVEMEMLOG(pos, tam, id)                                            \
+    ((void)((ml.ativo == MLATIVO) ? escreveMemLog(pos, tam, id) : 0))
 
 // prototipos das funcoes
 
-int iniciaMemLog(char * nome);
+int iniciaMemLog(char *nome);
 int ativaMemLog();
 int desativaMemLog();
 int defineFaseMemLog(int f);
