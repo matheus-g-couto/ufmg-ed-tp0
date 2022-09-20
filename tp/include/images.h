@@ -28,7 +28,4 @@ void readPpmImg(PpmImg *ppm);
 void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm);
 void writePgmImg(PgmImg *pgm);
 
-void killPpmImg(PpmImg *ppm);
-void killPgmImg(PgmImg *pgm);
-
 #endif

@@ -80,6 +80,10 @@ void readPpmImg(PpmImg *ppm) {
 void convertPpmToPgm(PpmImg *ppm, PgmImg *pgm) {
     pgm->width = ppm->width;
     pgm->height = ppm->height;
+    LEMEMLOG((long int)(&(ppm->width)), sizeof(int), 0);
+    LEMEMLOG((long int)(&(ppm->height)), sizeof(int), 0);
+    ESCREVEMEMLOG((long int)(&(pgm->width)), sizeof(int), 1);
+    ESCREVEMEMLOG((long int)(&(pgm->height)), sizeof(int), 1);
 
     // aloca a matriz gray dinamicamente
     pgm->gray = new int *[pgm->height];
@@ -112,6 +116,9 @@ void writePgmImg(PgmImg *pgm) {
     out << pgm->width << " " << pgm->height << std::endl;
     out << 49 << std::endl;
 
+    LEMEMLOG((long int)(&(pgm->width)), sizeof(int), 1);
+    LEMEMLOG((long int)(&(pgm->height)), sizeof(int), 1);
+
     for (int i = 0; i < pgm->height; i++) {
         for (int j = 0; j < pgm->width; j++) {
             out << pgm->gray[i][j];
@@ -122,29 +129,4 @@ void writePgmImg(PgmImg *pgm) {
         }
         out << std::endl;
     }
-}
-
-// Desaloca a memória usada por uma variável PpmImg
-void killPpmImg(PpmImg *ppm) {
-    for (int i = 0; i < ppm->width; i++) {
-        delete[] ppm->red[i];
-        delete[] ppm->green[i];
-        delete[] ppm->blue[i];
-    }
-
-    delete[] ppm->red;
-    delete[] ppm->green;
-    delete[] ppm->blue;
-
-    ppm->width = ppm->height = -1;
-}
-
-// Desaloca a memória usada por uma variável PgmImg
-void killPgmImg(PgmImg *pgm) {
-    for (int i = 0; i < pgm->width; i++) {
-        delete[] pgm->gray[i];
-    }
-
-    delete[] pgm->gray;
-    pgm->width = pgm->height = -1;
 }
